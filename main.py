@@ -4,6 +4,7 @@ from playsound import playsound
 import vlc
 from enum import Enum
 import signal
+import time
 
 media_player = vlc.MediaPlayer()
 media_player.stop()
@@ -34,6 +35,7 @@ def callback_fn(channel):
     if(media_player.is_playing()):
         print("ignoring...")
         return
+
     if channel == PINS.HUNGRY.value:
         media_player.set_media(SOUNDS.get(PINS.HUNGRY))
         media_player.play()
@@ -55,12 +57,21 @@ def callback_fn(channel):
         media_player.play()
 
 
-GPIO.setmode(GPIO.BOARD)
 
-for pin in PINS:
-    GPIO.setup(pin.value, GPIO.IN)
-    GPIO.add_event_detect(pin.value, GPIO.RISING, callback=callback_fn)
 
-while 1:
-    pass
+def main():
 
+    time.sleep(15)
+
+    playsound("/home/rjyarwood/Soundboard/beep.mp3")
+
+    GPIO.setmode(GPIO.BOARD)
+    for pin in PINS:
+        GPIO.setup(pin.value, GPIO.IN)
+        GPIO.add_event_detect(pin.value, GPIO.RISING, callback=callback_fn)
+
+    while 1:
+        pass
+
+if __name__ == '__main__':
+    main()
